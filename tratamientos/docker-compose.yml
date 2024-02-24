@@ -1,35 +1,33 @@
 version: '3.9' # optional since v1.27.0
 services:
-  drugs_dynamo:
-    container_name: drugs_dynamo
+  dynamo:
+    container_name: dynamo
     image: amazon/dynamodb-local
     hostname: dynamodb-local
     command: '-jar DynamoDBLocal.jar -sharedDb'
     networks:
-      - drugs-network
+      - taller3-network
 
-  drug_service:
-    container_name: drug_service
-    build:
-      dockerfile: Dockerfile.prod
+  treatments:
+    container_name: treatments
+    image: taller3-tratamientos
     depends_on:
-      - drugs_dynamo
+      - dynamo
     ports:
-      - '9000:9000'
+      - "9004:9000"
     environment:
       - PORT=9000
       - DYNAMO_ACCESS_KEY_ID=key
       - DYNAMO_SECRET_KEY_ID=secret
       - DYNAMO_REGION=us-east-2
-      - DYNAMO_ENDPOINT=http://drugs_dynamo:8000
+      - DYNAMO_ENDPOINT=http://dynamo:8000
       - secret="jamas me usan bien"
       - algorithm=HS256
 
     networks:
-      - drugs-network
+      - taller3-network
 
 networks:
-  drugs-network:
-    name: 'drugs-network'
-volumes:
-  data-volume:
+  taller3-network:
+    name: taller3-network
+    external: true

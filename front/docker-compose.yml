@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  front:
+    container_name: taller3-front
+    image: taller3-front
+    ports:
+      - "3000:3000"
+    networks:
+      - taller3-network
+
+networks:
+  taller3-network:
+    name: taller3-network
+    external: true
+

@@ -9,4 +9,4 @@ RUN npm install -g typescript
 RUN yarn build
 EXPOSE 3000
 
-ENTRYPOINT ["/bin/sh"]
+CMD ["/bin/sh", "-c", "yarn start --host"]

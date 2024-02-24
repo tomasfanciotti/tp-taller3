@@ -1,30 +1,19 @@
 version: "3.8"
 services:
   users:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    hostname: users  
-    container_name: users  
+    image: taller3-usuarios
+    container_name: users
     ports:
-      - "9000:9000"
-    volumes:
-      - .:/app
-      - /app/.venv
-    env_file:  
-      - .env
-    depends_on:
-      - db
+      - "9005:9000"
+    environment:
+       - PORT=9000
+       - DB_URL=postgres://admin:admin@postgres:5432/pets?sslmode=disable
+       - secret="jamas me usan bien"
+       - algorithm=HS256
+    networks:
+      - taller3-network
 
-  db:
-    image: postgres:13-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    hostname: db_postgres  
-    container_name: db_postgres  
-    restart: on-failure  
-    ports:
-      - 5432:5432
-  
-volumes:
-  postgres_data:
+networks:
+  taller3-network:
+    name: taller3-network
+    external: true
