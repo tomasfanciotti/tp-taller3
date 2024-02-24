@@ -102,18 +102,6 @@ func (a *App) RegisterRoutes(r *gin.Engine) {
 }
 
 func (a *App) RunForrestRun(r *gin.Engine) error {
-	port := os.Getenv(portEnv)
-	if port == "" {
-		logrus.Info("Using default port (8069)")
-	}
-
-	// ToDo: add thread for ticker
-
-	err := r.Run(fmt.Sprintf(":%s", port))
-	return err
-}
-
-func (a *App) Sarasa(r *gin.Engine) error {
 	errChannel := make(chan error, 1)
 	go func() {
 		logrus.Info("Starting Ticker")
@@ -143,8 +131,8 @@ func (a *App) runTicker() error {
 
 	logrus.Debugf("Waiting %v until the next o'clock hour", triggerTicker)
 	delayTicker := time.NewTicker(triggerTicker)
-	gap := 30 * time.Minute                    // Notifications will be sent every half hour
-	notificationsTicker := time.NewTicker(gap) // Notifications will be sent every half hour
+	gap := 30 * time.Minute // Notifications will be sent every half hour
+	notificationsTicker := time.NewTicker(gap)
 
 	for {
 		select {
