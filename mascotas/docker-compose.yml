@@ -1,35 +1,33 @@
-version: "3"
+version: "3.9"
 services:
-  pets-mysql:
-    container_name: pets-mysql
-    image: mysql:latest
-    ports:
-      - 3306:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=pets
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin
-
-  pets-postgres:
-    container_name: pets-postgres
+  postgres:
+    container_name: postgres
     image: postgres:latest
-    ports:
-      - 5432:5432
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - POSTGRES_DB=pets
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-
-  back:
-    container_name: back-mascotas
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - taller3-network
+  pets:
+    container_name: pets
     image: back-mascotas
     ports:
-      - 9001:9001
+      - "9001:9000"
     environment:
-      - PORT=9001
-      - DB_URL=postgres://admin:admin@pets-postgres:5432/pets?sslmode=disable
+      - PORT=9000
+      - DB_URL=postgres://admin:admin@postgres:5432/pets?sslmode=disable
     depends_on:
-      - pets-mysql
-      - pets-postgres
+      - postgres
+    networks:
+        - taller3-network
+
+networks:
+  taller3-network:
+    name: taller3-network
+
+volumes:
+  postgres_data:

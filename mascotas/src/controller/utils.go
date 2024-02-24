@@ -1,11 +1,14 @@
 package controller
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
 	"net/http"
 	"petplace/back-mascotas/src/model"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -14,6 +17,10 @@ const (
 
 	offsetDefault = "0"
 	limitDefault  = "10"
+
+	IDParamName = "id"
+
+	logTemplate = "ABMController: %s | method: %s | msg: %s"
 )
 
 func getSearchParams(c *gin.Context) (*model.SearchParams, *APIError) {
@@ -36,35 +43,29 @@ func getSearchParams(c *gin.Context) (*model.SearchParams, *APIError) {
 	}, nil
 }
 
-func getLocation(c *gin.Context) (*model.Location, *APIError) {
-	latitudeStr := c.Query("latitude")
-	if latitudeStr == "" {
-		err := fmt.Errorf("%v: expected longitude", MissingParams)
-		return nil, NewApiError(err, http.StatusBadRequest)
-	}
+func getBodyString(c *gin.Context) string {
 
-	longitudeStr := c.Query("longitude")
-	if longitudeStr == "" {
-		err := fmt.Errorf("%v: expected longitude", MissingParams)
-		return nil, NewApiError(err, http.StatusBadRequest)
-	}
-
-	latitude, err := strconv.ParseFloat(latitudeStr, 64)
+	bodyBytes, err := getBody(c)
 	if err != nil {
-		apiErr := fmt.Errorf("error parsing latitude: %v", err)
-		return nil, NewApiError(apiErr, http.StatusBadRequest)
+		return ""
 	}
+	reWriteBody(c, bodyBytes)
+	return strings.ReplaceAll(string(bodyBytes), "\n", "")
+}
 
-	longitude, err := strconv.ParseFloat(longitudeStr, 64)
+func reWriteBody(c *gin.Context, body []byte) {
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
+}
+
+func getBody(c *gin.Context) ([]byte, error) {
+
+	var requestBodyBuffer bytes.Buffer
+
+	teeReader := io.TeeReader(c.Request.Body, &requestBodyBuffer)
+	bodyBytes, err := io.ReadAll(teeReader)
 	if err != nil {
-		apiErr := fmt.Errorf("error parsing longitude: %v", err)
-		return nil, NewApiError(apiErr, http.StatusBadRequest)
+		return nil, err
 	}
 
-	loc := model.Location{
-		Latitude:  latitude,
-		Longitude: longitude,
-	}
-
-	return &loc, nil
+	return bodyBytes, nil
 }

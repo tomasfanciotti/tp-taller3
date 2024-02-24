@@ -1,10 +1,10 @@
-version: "3"
+version: "3.9"
 services:
   notifications:
-    container_name: notification-scheduler
+    container_name: notifications
     image: taller3-notificaciones
     ports:
-      - '9069:9069'
+      - '9002:9069'
     environment:
       - PORT=9069
       - LOG_LEVEL=INFO
@@ -12,3 +12,10 @@ services:
       - algorithm=HS256
       - TELEGRAM_SECRET=TeEstasPortandoMal
       - TELEGRAM_ACCESS_CODE=SerasCastigada
+    networks:
+      - taller3-network
+
+networks:
+  taller3-network:
+    name: taller3-network
+    external: true
