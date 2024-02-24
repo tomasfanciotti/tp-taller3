@@ -44,7 +44,7 @@ const AddApplicationScreen: React.FC = () => {
       treatment_id: s.get('treatment_id'),
       type,
     }
-    mutate({ url: 'https://api.lnt.digital/treatments/application/', body })
+    mutate({ url: 'http://localhost:9000/treatments/application/', body })
   };
 
   useEffect(() => {

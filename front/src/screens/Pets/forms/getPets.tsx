@@ -13,7 +13,7 @@ const ViewPets: React.FC<{ user?: { id: string } }> = ({ user }) => {
   const realUser = useAuthSession();
   const [pets, setPets] = useState<PetPropsResponse[]>([]);
   const { isLoading, data, isSuccess } = useGetQuery<{ results: PetPropsResponse[] }>(
-    `https://api.lnt.digital/pets/owner/${id}`
+    `http://localhost:9001/pets/owner/${id}`
   );
 
   const navigate = useNavigate();

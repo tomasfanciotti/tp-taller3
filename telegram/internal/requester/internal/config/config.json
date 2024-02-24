@@ -1,7 +1,7 @@
 {
   "pets_service":
   {
-    "base": "https://api.lnt.digital/pets",
+    "base": "http://localhost:9001/pets",
     "endpoints":
     {
       "register_pet":
@@ -28,7 +28,7 @@
   },
   "treatments_service":
   {
-    "base": "https://api.lnt.digital/treatments",
+    "base": "http://localhost:9000/treatments",
     "endpoints": {
       "get_pet_treatments": {
         "path": "/treatment/pet/{petID}",
@@ -65,7 +65,7 @@
   },
   "notifications_service":
   {
-    "base": "https://api.lnt.digital/notifications",
+    "base": "http://localhost:9069/notifications",
     "endpoints": {
       "schedule_notifications":
       {

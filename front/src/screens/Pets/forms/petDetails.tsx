@@ -30,7 +30,7 @@ const PetDetails: React.FC<{ user?: { isDoctor: boolean, id: string } }> = ({ us
   const isDoctor = !!user?.isDoctor;
   const { id } = useParams<{ id: string }>();
   const { isLoading, data: petDetailsFetched, isSuccess } = useGetQuery<PetPropsResponse>(
-    `https://api.lnt.digital/pets/pet/${id}`
+    `http://localhost:9001/pets/pet/${id}`
   );
   const [imgRefresh, setNewRefresh] = useState(Date.now());
   const { mutate: uploadPic, isSuccess: picUploaded } = useS3UploadMutation('my.little.ponny');
@@ -51,7 +51,7 @@ const PetDetails: React.FC<{ user?: { isDoctor: boolean, id: string } }> = ({ us
   const handleSave = () => {
     if (editedPetDetails) {
       mutate({
-        url: `https://api.lnt.digital/pets/pet/${id}`,
+        url: `http://localhost:9001/pets/pet/${id}`,
         body: editedPetDetails,
       });
     }
@@ -81,7 +81,7 @@ const PetDetails: React.FC<{ user?: { isDoctor: boolean, id: string } }> = ({ us
       const imgUrl = `https://s3.us-east-2.amazonaws.com/my.little.ponny/${picId}.png`;
       setEditedPetDetails({ ...editedPetDetails!, img_url: imgUrl });
       mutate({
-        url: `https://api.lnt.digital/pets/pet/${id}`,
+        url: `http://localhost:9001/pets/pet/${id}`,
         body: { img_url: imgUrl },
       });
       setNewRefresh(Date.now());

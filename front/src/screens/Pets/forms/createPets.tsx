@@ -40,7 +40,7 @@ const CreatePet: React.FC = () => {
     const formattedDate = format(newPet.birthdate, 'yyyy-MM-dd');
 
     postMutation.mutate({
-      url: 'https://api.lnt.digital/pets/pet',
+      url: 'http://localhost:9001/pets/pet',
       body: { ...newPet, birth_date: formattedDate, owner_id: user?.id },
     });
   };

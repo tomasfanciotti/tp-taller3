@@ -16,7 +16,7 @@ import (
 const (
 	telegramSecretEnvVar     = "TELEGRAM_SECRET"
 	telegramAccessCodeEnvVar = "TELEGRAM_ACCESS_CODE"
-	url                      = "https://api.lnt.digital/telegram/notifications"
+	url                      = "http://localhost:6969/telegram/notifications"
 )
 
 // Telegramer makes requests against Telegram Service

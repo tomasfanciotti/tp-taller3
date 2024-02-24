@@ -4,7 +4,7 @@ services:
     container_name: notification-scheduler
     image: taller3-notificaciones
     ports:
-      - 9069:9069
+      - '9069:9069'
     environment:
       - PORT=9069
       - LOG_LEVEL=INFO

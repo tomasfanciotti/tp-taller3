@@ -9,7 +9,7 @@ import SpeechModal from "../../../components/Voice";
 
 const EditTreatmentScreen: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const url = `https://api.lnt.digital/treatments/treatment/specific/${id}`;
+  const url = `http://localhost:9000/treatments/treatment/specific/${id}`;
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [nextDose, setNextDose] = useState<Date | null>(null);
@@ -36,7 +36,7 @@ const EditTreatmentScreen: React.FC = () => {
       date_end: endDate?.toISOString(),
       id,
     }
-    mutate({ url: `https://api.lnt.digital/treatments/treatment/${id}`, body: treatmentUpdated });
+    mutate({ url: `http://localhost:9000/treatments/treatment/${id}`, body: treatmentUpdated });
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const EditTreatmentScreen: React.FC = () => {
   };
 
   const handleSaveText = (text: string) => {
-    addComment({ url: `https://api.lnt.digital/treatments/treatment/comment/${id}`, body: { comment: text } })
+    addComment({ url: `http://localhost:9000/treatments/treatment/comment/${id}`, body: { comment: text } })
     handleCloseModal();
   };
 
