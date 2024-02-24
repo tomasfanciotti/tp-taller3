@@ -1,0 +1,77 @@
+{
+  "pets_service":
+  {
+    "base": "https://api.lnt.digital/pets",
+    "endpoints":
+    {
+      "register_pet":
+      {
+        "path": "/pet",
+        "method": "POST"
+      },
+      "get_pets":
+      {
+        "path": "/owner/{ownerID}",
+        "method": "GET",
+        "query_params":
+        {
+          "offset": 0,
+          "limit": 100
+        }
+      },
+      "get_pet_by_id":
+      {
+        "path": "/pet/{petID}",
+        "method": "GET"
+      }
+    }
+  },
+  "treatments_service":
+  {
+    "base": "https://api.lnt.digital/treatments",
+    "endpoints": {
+      "get_pet_treatments": {
+        "path": "/treatment/pet/{petID}",
+        "method": "GET",
+        "query_params": {
+          "offset": 0,
+          "limit": 5
+        }
+      },
+      "get_treatment": {
+        "path": "/treatment/specific/{treatmentID}",
+        "method": "GET"
+      },
+      "get_vaccines": {
+        "path": "/application/pet/{petID}",
+        "method": "GET",
+        "query_params": {
+          "offset": 0,
+          "limit": 100
+        }
+      }
+    }
+  },
+  "users_service":
+  {
+    "base": "https://api.lnt.digital/users",
+    "endpoints": {
+      "get_user":
+      {
+        "path": "/telegram_id/{telegramID}",
+        "method": "GET"
+      }
+    }
+  },
+  "notifications_service":
+  {
+    "base": "https://api.lnt.digital/notifications",
+    "endpoints": {
+      "schedule_notifications":
+      {
+        "path": "/notification",
+        "method": "POST"
+      }
+    }
+  }
+}
