@@ -1,0 +1,41 @@
+version: '3.9' # optional since v1.27.0
+services:
+  drugs_dynamo:
+    container_name: drugs_dynamo
+    image: amazon/dynamodb-local
+    hostname: dynamodb-local
+    command: '-jar DynamoDBLocal.jar -sharedDb'
+    ports:
+      - '4334:8000'
+    networks:
+      - drugs-network
+
+  drug_service:
+    container_name: drug_service
+    build:
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - drugs_dynamo
+    ports:
+      - '9000:9000'
+    environment:
+      - PORT=9000
+      - GIN_PORT=9000 # used only for dev, but PORT is on prod
+      - DB_URL=${DB_URL}
+      - DYNAMO_ACCESS_KEY_ID=key
+      - DYNAMO_SECRET_KEY_ID=secret
+      - DYNAMO_ENDPOINT=http://localhost:4334
+
+    volumes:
+      - './.env:/app/.env'
+      - './src/:/app/src/'
+      - './main.go:/app/main.go'
+      - './docs/:/app/docs'
+    networks:
+      - drugs-network
+
+networks:
+  drugs-network:
+    name: 'drugs-network'
+volumes:
+  data-volume:

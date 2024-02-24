@@ -1,0 +1,501 @@
+definitions:
+  controller.Application:
+    properties:
+      applied_to:
+        example: 20
+        type: integer
+      date:
+        example: "2006-01-02T15:04:05Z"
+        type: string
+      id:
+        example: e013f973-ed95-45c5-8bc4-3abf2d9112c3
+        type: string
+      name:
+        example: Anti rabica
+        type: string
+      treatment_id:
+        example: a45b9e1a-366a-450e-b298-f455139bfcd0
+        type: string
+      type:
+        example: vaccine
+        type: string
+    type: object
+  controller.Comment:
+    properties:
+      date_added:
+        example: "2023-01-02T15:04:05Z"
+        type: string
+      information:
+        type: string
+      owner:
+        type: string
+    type: object
+  controller.CommentInput:
+    properties:
+      comment:
+        type: string
+    required:
+    - comment
+    type: object
+  controller.ErrorMsg:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+    type: object
+  controller.Treatment:
+    properties:
+      applied_to:
+        example: 20
+        type: integer
+      comments:
+        items:
+          $ref: '#/definitions/controller.Comment'
+        type: array
+      date_end:
+        example: "2023-01-02T15:04:05Z"
+        type: string
+      date_start:
+        example: "2006-01-02T15:04:05Z"
+        type: string
+      description:
+        type: string
+      id:
+        example: e013f973-ed95-45c5-8bc4-3abf2d9112c3
+        type: string
+      next_dose:
+        example: "2023-01-02T15:04:05Z"
+        type: string
+      type:
+        example: papota
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /treatments/application:
+    post:
+      consumes:
+      - application/json
+      description: Create an application for a given animal
+      parameters:
+      - description: TBD
+        in: body
+        name: Application
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Application'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Application'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Creates an application
+      tags:
+      - Application request
+    put:
+      consumes:
+      - application/json
+      description: Updates an application changing everything on it, except the id
+      parameters:
+      - description: TBD
+        in: body
+        name: Application
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Application'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Application'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Updates an application
+      tags:
+      - Application request
+  /treatments/application/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a given application with given id
+      parameters:
+      - description: application affected
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Application'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Deletes an application
+      tags:
+      - Application request
+    patch:
+      consumes:
+      - application/json
+      description: Updates an application only changing the specified fields
+      parameters:
+      - description: Application affected
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: TBD
+        in: body
+        name: Application
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Application'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Application'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Updates an application
+      tags:
+      - Application request
+  /treatments/application/pet/{pet}:
+    get:
+      consumes:
+      - application/json
+      description: Updates an application only changing the specified fields
+      parameters:
+      - description: Application affected
+        in: path
+        name: pet
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.Application'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Get an application
+      tags:
+      - Application request
+  /treatments/application/specific/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an application with a given id
+      parameters:
+      - description: application id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Application'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Get an application
+      tags:
+      - Application request
+  /treatments/application/treatment/{treatmentId}:
+    get:
+      consumes:
+      - application/json
+      description: Updates an application only changing the specified fields
+      parameters:
+      - description: Application affected
+        in: path
+        name: treatmentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.Application'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Get an application
+      tags:
+      - Application request
+  /treatments/treatment:
+    post:
+      consumes:
+      - application/json
+      description: Create a treatment for a given animal
+      parameters:
+      - description: TBD
+        in: body
+        name: treatment
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Treatment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Treatment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Creates a treatment
+      tags:
+      - Treatment request
+    put:
+      consumes:
+      - application/json
+      description: Updates a treatment changing everything on it, except the id
+      parameters:
+      - description: TBD
+        in: body
+        name: treatment
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Treatment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Treatment'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Updates a treatment
+      tags:
+      - Treatment request
+  /treatments/treatment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a given treatment with given id
+      parameters:
+      - description: treatment affected
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: pet affected
+        in: path
+        name: pet
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Treatment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Deletes a treatment
+      tags:
+      - Treatment request
+    patch:
+      consumes:
+      - application/json
+      description: Updates a treatment only changing the specified fields
+      parameters:
+      - description: treatment affected
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: TBD
+        in: body
+        name: treatment
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Treatment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Treatment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Updates a treatment
+      tags:
+      - Treatment request
+  /treatments/treatment/comment/{treatmentId}:
+    post:
+      consumes:
+      - application/json
+      description: Adds a comment to the treatment
+      parameters:
+      - description: treatment affected
+        in: path
+        name: pet
+        required: true
+        type: string
+      - description: Comment from the treatment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CommentInput'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Treatment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Add a comment
+      tags:
+      - Treatment request
+  /treatments/treatment/pet/{pet}:
+    get:
+      consumes:
+      - application/json
+      description: Updates a treatment only changing the specified fields
+      parameters:
+      - description: treatment affected
+        in: path
+        name: pet
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.Treatment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Get a treatment
+      tags:
+      - Treatment request
+  /treatments/treatment/specific/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Updates a treatment only changing the specified fields
+      parameters:
+      - description: treatment affected
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.Treatment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrorMsg'
+      summary: Get a treatment
+      tags:
+      - Treatment request
+swagger: "2.0"
