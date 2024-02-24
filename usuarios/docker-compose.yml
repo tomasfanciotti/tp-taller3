@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  users:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: users  
+    container_name: users  
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+      - /app/.venv
+    env_file:  
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    hostname: db_postgres  
+    container_name: db_postgres  
+    restart: on-failure  
+    ports:
+      - 5432:5432
+  
+volumes:
+  postgres_data:
