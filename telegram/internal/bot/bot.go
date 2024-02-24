@@ -22,7 +22,6 @@ const (
 	salchiFactEndpoint           = "/salchiFact"
 	setNotificationEndpoint      = "/setNotification"
 	registerNotificationEndpoint = "/notification"
-	getVetsEndpoint              = "/getVets"
 )
 
 // TelegramBot handles requests from telegram. Is in charge to interact with different services
@@ -57,8 +56,6 @@ func (tb *TelegramBot) DefineHandlers() {
 
 	tb.bot.Handle(salchiFactEndpoint, tb.getSalchiFact)
 
-	tb.bot.Handle(getVetsEndpoint, tb.getVets)
-
 	tb.bot.Handle(setNotificationEndpoint, tb.setAlarm)
 
 	// Button handlers
@@ -78,8 +75,6 @@ func (tb *TelegramBot) DefineHandlers() {
 	tb.bot.Handle(tele.OnText, tb.textHandler)
 
 	tb.bot.Handle(tele.OnEdited, tb.editMessageHandler)
-
-	tb.bot.Handle(tele.OnLocation, tb.searchVets)
 }
 
 func (tb *TelegramBot) StartBot() {
