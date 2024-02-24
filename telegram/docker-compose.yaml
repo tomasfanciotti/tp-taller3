@@ -1,15 +1,12 @@
-version: '3.9'
+version: "3"
 services:
   telegram:
     container_name: telegram-bot
-    image: telegramer:latest
-    entrypoint: ./main
+    image: taller3-telegram
+    ports:
+      - 6969:6969
     environment:
       - LOG_LEVEL=INFO
-    networks:
-      - telegram-network
-
-
-networks:
-  telegram-network:
-    name: telegram-network
+      - SECRET=TeEstasPortandoMal
+      - ALGORITHM=HS256
+      - ACCESS_CODE=SerasCastigada

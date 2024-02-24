@@ -27,7 +27,6 @@ var (
 	Vaccines       = Menu.Data(fmt.Sprintf("Vaccines %s", emoji.Syringe), vaccinesEndpoint)
 	MedicalHistory = Menu.Data(fmt.Sprintf("Medical history %v", emoji.OrangeBook), medicalHistoryEndpoint)
 	Treatment      = Menu.Data("", treatmentInfoEndpoint)
-	Location       = Menu.Location("Location")
 )
 
 func SignUpButton(telegramID int64) *tele.ReplyMarkup {

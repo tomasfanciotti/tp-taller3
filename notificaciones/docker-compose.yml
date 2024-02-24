@@ -1,0 +1,14 @@
+version: "3"
+services:
+  notifications:
+    container_name: notification-scheduler
+    image: taller3-notificaciones
+    ports:
+      - 9069:9069
+    environment:
+      - PORT=9069
+      - LOG_LEVEL=INFO
+      - secret="no me usan bien"
+      - algorithm=HS256
+      - TELEGRAM_SECRET=TeEstasPortandoMal
+      - TELEGRAM_ACCESS_CODE=SerasCastigada
