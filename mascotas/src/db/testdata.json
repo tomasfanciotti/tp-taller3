@@ -1,0 +1,15 @@
+{
+  "pets": {
+    "12": {
+      "ID": 12,
+      "Data": {
+        "id": 12,
+        "name": "Javolero",
+        "type": "cat",
+        "register_date": "0001-01-01T00:00:00Z",
+        "birth_date": "2002-01-02T00:00:00Z",
+        "owner_id": 1
+      }
+    }
+  }
+}

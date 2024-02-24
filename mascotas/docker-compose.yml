@@ -1,0 +1,35 @@
+version: "3"
+services:
+  pets-mysql:
+    container_name: pets-mysql
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=pets
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+
+  pets-postgres:
+    container_name: pets-postgres
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - POSTGRES_DB=pets
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+
+  back:
+    container_name: back-mascotas
+    image: back-mascotas
+    ports:
+      - 9001:9001
+    environment:
+      - PORT=9001
+      - DB_URL=postgres://admin:admin@pets-postgres:5432/pets?sslmode=disable
+    depends_on:
+      - pets-mysql
+      - pets-postgres

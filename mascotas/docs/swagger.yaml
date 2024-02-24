@@ -1,0 +1,922 @@
+definitions:
+  controller.APIError:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  controller.Doctor:
+    properties:
+      email:
+        example: JuanValdez@gmail.com
+        type: string
+      name:
+        example: Juan Valdez
+        type: string
+      phone:
+        example: "123456789"
+        type: string
+    type: object
+  controller.Location:
+    properties:
+      latitude:
+        example: -34.603684
+        type: number
+      longitude:
+        example: -58.381559
+        type: number
+    type: object
+  controller.Pet:
+    properties:
+      birth_date:
+        example: "2013-05-23"
+        type: string
+      name:
+        example: Raaida
+        type: string
+      owner_id:
+        example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/model.AnimalType'
+        example: dog
+    type: object
+  controller.Vaccine:
+    properties:
+      animal:
+        allOf:
+        - $ref: '#/definitions/model.AnimalType'
+        example: dog
+      description:
+        example: vaccine to preventing rage
+        type: string
+      name:
+        example: anti-rabies
+        type: string
+      scheduled:
+        example: 365
+        type: integer
+    type: object
+  controller.Veterinary:
+    properties:
+      address:
+        example: Av. Siempreviva 123
+        type: string
+      city_id:
+        example: Buenos Aires
+        type: string
+      day_guard:
+        example: 1
+        type: integer
+      doctors:
+        items:
+          $ref: '#/definitions/controller.Doctor'
+        type: array
+      email:
+        example: veterinary1@gmail.com
+        type: string
+      img_url:
+        example: www.veterinary1.com/img.png
+        type: string
+      location:
+        $ref: '#/definitions/controller.Location'
+      name:
+        example: Veterinary 1
+        type: string
+      phone:
+        example: "123456789"
+        type: string
+      web_site:
+        example: www.veterinary1.com
+        type: string
+    type: object
+  model.AnimalType:
+    enum:
+    - dog
+    - cat
+    - bird
+    - hamster
+    type: string
+    x-enum-varnames:
+    - Dog
+    - Cat
+    - Bird
+    - Hamster
+  model.Doctor:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  model.Location:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  model.Paging:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  model.Pet:
+    properties:
+      birth_date:
+        type: string
+      id:
+        type: integer
+      img_url:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      register_date:
+        type: string
+      type:
+        $ref: '#/definitions/model.AnimalType'
+    type: object
+  model.SearchResponse-model_Pet:
+    properties:
+      paging:
+        $ref: '#/definitions/model.Paging'
+      results:
+        items:
+          $ref: '#/definitions/model.Pet'
+        type: array
+    type: object
+  model.SearchResponse-model_Veterinary:
+    properties:
+      paging:
+        $ref: '#/definitions/model.Paging'
+      results:
+        items:
+          $ref: '#/definitions/model.Veterinary'
+        type: array
+    type: object
+  model.VaccinationPlan:
+    properties:
+      applied:
+        items:
+          $ref: '#/definitions/model.Vaccine'
+        type: array
+      name:
+        type: string
+      ownerID:
+        type: string
+      pending:
+        items:
+          $ref: '#/definitions/model.Vaccine'
+        type: array
+      type:
+        type: string
+    type: object
+  model.Vaccine:
+    properties:
+      animal:
+        $ref: '#/definitions/model.AnimalType'
+      applied_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      scheduled:
+        type: integer
+    type: object
+  model.Veterinary:
+    properties:
+      address:
+        type: string
+      city_id:
+        type: string
+      day_guard:
+        type: integer
+      doctors:
+        items:
+          $ref: '#/definitions/model.Doctor'
+        type: array
+      email:
+        type: string
+      id:
+        type: integer
+      img_url:
+        type: string
+      location:
+        $ref: '#/definitions/model.Location'
+      name:
+        type: string
+      phone:
+        type: string
+      web_site:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /pets:
+    get:
+      consumes:
+      - application/json
+      description: Get all pets in the system
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: name of pet to search
+        in: query
+        name: name
+        type: string
+      - description: type pet to search
+        in: query
+        name: type
+        type: string
+      - description: owner of the pet to search
+        in: query
+        name: owner_id
+        type: string
+      - description: offset of the results
+        in: query
+        name: offset
+        type: integer
+      - description: 'limit of the results '
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get all pets
+      tags:
+      - Pet
+  /pets/owner/{owner_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a pet list given the owner ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: owner id to get pets
+        in: path
+        name: owner_id
+        required: true
+        type: string
+      - description: offset of the results
+        in: query
+        name: offset
+        type: integer
+      - description: 'limit of the results '
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SearchResponse-model_Pet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get pets of owner
+      tags:
+      - Pet
+  /pets/pet:
+    post:
+      consumes:
+      - application/json
+      description: Create a pet for a given user
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: pet info
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Pet'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Pet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Creates a Pet
+      tags:
+      - Pet
+  /pets/pet/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a pet given a pet ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the pet
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Delete a Pet
+      tags:
+      - Pet
+    get:
+      consumes:
+      - application/json
+      description: Get pet info given a pet ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the pet
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Pet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get a Pet
+      tags:
+      - Pet
+    put:
+      consumes:
+      - application/json
+      description: Edit pet info given a pet ID and pet info needed to update
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the pet
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: pet info
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Pet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Pet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Edit a Pet
+      tags:
+      - Pet
+  /vaccines/plan/{pet_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the vaccination plan of given pet_id
+      parameters:
+      - description: pet id to get vaccines
+        in: path
+        name: pet_id
+        required: true
+        type: integer
+      - description: desired formant for the output
+        enum:
+        - applied
+        - pending
+        in: query
+        name: output
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.VaccinationPlan'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get vaccination plan
+      tags:
+      - Vaccine
+  /vaccines/vaccine:
+    post:
+      consumes:
+      - application/json
+      description: Create a vaccine
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: vaccine info
+        in: body
+        name: vaccine
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Vaccine'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Vaccine'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Creates a Vaccine
+      tags:
+      - Vaccine
+  /vaccines/vaccine/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Vaccine given a pet ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the vaccine
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Delete a Vaccine
+      tags:
+      - Vaccine
+    get:
+      consumes:
+      - application/json
+      description: Get vaccine info
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the vaccine
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Vaccine'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get a Vaccine
+      tags:
+      - Vaccine
+    put:
+      consumes:
+      - application/json
+      description: Edit vaccine info given a pet ID and vaccine info needed to update
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the vaccine
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: vaccine info
+        in: body
+        name: vaccine
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Vaccine'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Vaccine'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Edit a Vaccine
+      tags:
+      - Vaccine
+  /veterinaries:
+    get:
+      consumes:
+      - application/json
+      description: Get veterinaries applying filters by city, day_guard, offset and
+        limit
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: city of the veterinary
+        in: query
+        name: city
+        type: string
+      - description: day_guard of the veterinary
+        in: query
+        name: day_guard
+        type: integer
+      - description: offset of the results
+        in: query
+        name: offset
+        type: integer
+      - description: 'limit of the results '
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SearchResponse-model_Veterinary'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get veterinaries
+      tags:
+      - Veterinary
+  /veterinaries/veterinary:
+    post:
+      consumes:
+      - application/json
+      description: Create a Veterinary
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: Veterinary info
+        in: body
+        name: veterinary
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Veterinary'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Veterinary'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Creates a Veterinary
+      tags:
+      - Veterinary
+  /veterinaries/veterinary/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Veterinary given a veterinary ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the veterinary
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Delete a Veterinary
+      tags:
+      - Veterinary
+    get:
+      consumes:
+      - application/json
+      description: Get veterinary info given a veterinary ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the veterinary
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Veterinary'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Get a veterinary
+      tags:
+      - Veterinary
+    put:
+      consumes:
+      - application/json
+      description: Edit Veterinary info given a veterinary ID
+      parameters:
+      - description: JWT header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: request from telegram
+        in: header
+        name: X-Telegram-App
+        required: true
+        type: boolean
+      - description: chat id of the telegram user
+        in: header
+        name: X-Telegram-Id
+        type: string
+      - description: id of the Veterinary
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Veterinary info
+        in: body
+        name: veterinary
+        required: true
+        schema:
+          $ref: '#/definitions/controller.Veterinary'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Veterinary'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.APIError'
+      summary: Edit a Veterinary
+      tags:
+      - Veterinary
+swagger: "2.0"
