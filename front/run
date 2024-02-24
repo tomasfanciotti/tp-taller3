@@ -1,0 +1,1 @@
+docker run --rm -p 3000:3000 -v "$(pwd)/package.json":"/app/package.json" --mount type=bind,src="$(pwd)/src",dst="/app/src" --mount type=bind,src="$(pwd)/public",dst="/app/public" -i -t frontend:latest

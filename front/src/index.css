@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .mask-center {
+    mask-position: center;
+    -webkit-mask-position: center;
+  }
+  .mask-no-repeat {
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+  }
+  .mask-contain {
+    mask-size: contain;
+    -webkit-mask-size: contain;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: 'Didact Gothic', sans-serif;
+}
+
+
+
+p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.roboto {
+  font-family: 'roboto', sans-serif;
+}
+/* background */
+
+.golden-back {
+  background-color: #ddc080;
+}
+
+/* text */
+
+.golden-text {
+  color: #ddc080;
+}
+
+.dark-golden-text {
+  color: #bfaa7c;
+}
+
+.white-text {
+  color: white;
+}
+
+.grey-text {
+  color: #707070;
+}
+
+.red {
+  color: #ff7c73;
+}
+
+.green {
+  color: #71d17a;
+}
+
+.text-box {
+  max-width: 700px;
+  width: 95%;
+}
+/* others  */
+
+.title-icon {
+  color: #777cff;
+  font-size: 1.6rem;
+  margin-left: 10px;
+}

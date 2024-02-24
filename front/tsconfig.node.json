@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+
+    /* Path resolution */
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["./src/*"],
+      "components/*":["./src/components/*"],
+      "config/*":["./src/config/*"],
+      "constants/*":["./src/constants/*"],
+      "contexts/*":["./src/contexts/*"],
+      "hooks/*":["./src/hooks/*"],
+      "operations/*":["./src/operations/*"],
+      "screens": ["./src/screens/*"],
+      "types": ["./src/types/*"],
+      "utils": ["./src/utils/*"],
+    }
+  },
+  "include": ["vite.config.ts"]
+}

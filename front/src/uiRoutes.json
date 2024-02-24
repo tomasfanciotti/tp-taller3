@@ -1,0 +1,7 @@
+{
+  "auth": {
+    "signIn": "/",
+    "signUp": "/sign-up",
+    "forgotPassword": "/forgot-password"
+  }
+}
