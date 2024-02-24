@@ -368,10 +368,10 @@ func (nh *NotificationHandler) SendEmail(c *gin.Context) {
 //	@Failure		400,404			{object}	ErrorResponse
 //	@Router			/notifications/trigger [post]
 func (nh *NotificationHandler) TriggerNotifications(c *gin.Context) {
-	currentHour := time.Now().Hour()
-	notifications, err := nh.service.GetAll(fmt.Sprint(currentHour))
+	currentTime := time.Now()
+	notifications, err := nh.service.GetAll(fmt.Sprintf("%d:%d", currentTime.Hour(), currentTime.Minute()))
 	if err != nil {
-		a := fmt.Errorf("error searching all notifications for given hour %d: %v", currentHour, err)
+		a := fmt.Errorf("error searching all notifications for given hour %d:%d: %v", currentTime.Hour(), currentTime.Minute(), err)
 		errResponse := NewErrorResponse(a)
 		c.JSON(errResponse.StatusCode, errResponse)
 		return
@@ -408,4 +408,17 @@ func (nh *NotificationHandler) TriggerNotifications(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, nil)
+}
+
+// GetCurrentNotifications returns the notifications scheduled at the current hour
+func (nh *NotificationHandler) GetCurrentNotifications() ([]domain.Notification, error) {
+	currentTime := time.Now()
+	var minuteStr string
+	if currentTime.Minute() < 30 {
+		minuteStr = "00"
+	} else if currentTime.Minute()/10 == 3 {
+		minuteStr = "30"
+	}
+
+	return nh.service.GetAll(fmt.Sprintf("%d:%s", currentTime.Hour(), minuteStr))
 }

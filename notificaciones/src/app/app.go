@@ -25,6 +25,7 @@ type appHandler interface {
 	GetNotificationData(c *gin.Context)
 	UpdateNotification(c *gin.Context)
 	DeleteNotification(c *gin.Context)
+	GetCurrentNotifications() ([]domain.Notification, error)
 }
 
 type telegramHandler interface {
@@ -66,7 +67,7 @@ type App struct {
 // NewApp initializes all dependencies that App requires
 func NewApp() (*App, error) {
 	// DB
-	appDB := db.NewFakeDB(nil)
+	appDB := db.NewNotificationsDB(nil)
 
 	// Service
 	notificationService := service.NewNotificationService(appDB)
@@ -110,4 +111,79 @@ func (a *App) RunForrestRun(r *gin.Engine) error {
 
 	err := r.Run(fmt.Sprintf(":%s", port))
 	return err
+}
+
+func (a *App) Sarasa(r *gin.Engine) error {
+	errChannel := make(chan error, 1)
+	go func() {
+		logrus.Info("Starting Ticker")
+		errChannel <- a.runTicker()
+	}()
+
+	port := os.Getenv(portEnv)
+	go func() {
+		logrus.Info("Starting Notificationer")
+		errChannel <- r.Run(fmt.Sprintf(":%s", port))
+	}()
+
+	err := <-errChannel
+	return err
+}
+
+func (a *App) runTicker() error {
+	currentTime := time.Now()
+	var triggerTicker time.Duration
+	if currentTime.Minute() < 30 {
+		diff := 30 - currentTime.Minute()
+		triggerTicker = time.Duration(diff) * time.Minute
+	} else {
+		nextHour := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), currentTime.Hour()+1, 0, 0, 0, currentTime.Location())
+		triggerTicker = nextHour.Sub(currentTime)
+	}
+
+	logrus.Debugf("Waiting %v until the next o'clock hour", triggerTicker)
+	delayTicker := time.NewTicker(triggerTicker)
+	gap := 30 * time.Minute                    // Notifications will be sent every half hour
+	notificationsTicker := time.NewTicker(gap) // Notifications will be sent every half hour
+
+	for {
+		select {
+		case <-delayTicker.C:
+			fmt.Println("The wait is over")
+			notificationsTicker.Reset(gap)
+			delayTicker.Stop()
+			notifications, err := a.NotificationHandler.GetCurrentNotifications()
+			if err != nil {
+				logrus.Errorf("error fetching notifications: %v", err)
+				continue
+			}
+
+			if len(notifications) == 0 {
+				logrus.Infof("There aren't notifications scheduled for the given hour: %d:%d", currentTime.Hour(), currentTime.Minute())
+				continue
+			}
+
+			err = a.Telegramer.SendNotifications(notifications)
+			if err != nil {
+				logrus.Errorf("error sending shceduled notifications: %v", err)
+			}
+
+		case <-notificationsTicker.C:
+			notifications, err := a.NotificationHandler.GetCurrentNotifications()
+			if err != nil {
+				logrus.Errorf("error fetching notifications: %v", err)
+				continue
+			}
+
+			if len(notifications) == 0 {
+				logrus.Infof("There aren't notifications scheduled for the given hour: %d:%d", currentTime.Hour(), currentTime.Minute())
+				continue
+			}
+
+			err = a.Telegramer.SendNotifications(notifications)
+			if err != nil {
+				logrus.Errorf("error sending shceduled notifications: %v", err)
+			}
+		}
+	}
 }

@@ -4,8 +4,6 @@ import (
 	"notification-scheduler/internal/domain"
 )
 
-type searchFunction func(notification domain.Notification) bool
-
 type database interface {
 	CreateNotifications(notification domain.Notification) ([]domain.Notification, error)
 	GetNotificationsByEmail(email string) ([]domain.Notification, error)
