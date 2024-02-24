@@ -26,7 +26,7 @@ RUN apk add --no-cache ca-certificates
 COPY --from=builder app .
 
 # Expose port
-EXPOSE 9000
+EXPOSE 6969
 
 # Exec built binary
 CMD ./app
