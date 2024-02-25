@@ -19,6 +19,6 @@ To run the service, make sure you have Docker and Docker Compose installed on yo
 
 After starting the service, you can access it through the defined endpoints or APIs, depending on the functionality provided by the service.
 
-To access the Swagger documentation, visit [the swagger](http://localhost:9000/treatments/swagger/index.html).
+To access the Swagger documentation, visit [the swagger](http://localhost:9004/treatments/swagger/index.html).
 
 That's it! You should now have the Go service up and running on your local machine, utilizing DynamoDB as its database. If you encounter any issues or have any questions, feel free to reach out to us or consult the documentation. Happy coding!

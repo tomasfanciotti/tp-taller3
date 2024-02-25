@@ -12,7 +12,7 @@ const translations: Record<string, string> = {
 }
 const ApplicationTable: React.FC<{ path: string, onClick?: (d: Application) => void }> = ({ path, onClick }) => {
   const { id } = useParams<{ id: string }>();
-  const { data } = useGetQuery<Array<Application>>(`http://localhost:9000/treatments/application/${path}/${id}`);
+  const { data } = useGetQuery<Array<Application>>(`http://localhost:9004/treatments/application/${path}/${id}`);
   const columnsApp: Array<Column<Application>> = [
     {
       id: 'id',

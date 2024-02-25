@@ -18,6 +18,8 @@ services:
     environment:
       - PORT=9000
       - DB_URL=postgres://admin:admin@postgres:5432/pets?sslmode=disable
+      - secret="jamas me usan bien"
+      - algorithm=HS256
     depends_on:
       - postgres
     networks:

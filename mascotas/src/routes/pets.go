@@ -20,5 +20,4 @@ func (r *Routes) AddPetRoutes(service services.PetService, userService *requeste
 	group.DELETE("/pet/:id", c.Delete)
 
 	return nil
-
 }
