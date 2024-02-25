@@ -102,7 +102,7 @@ func createAccessToken() (string, error) {
 			"exp":         time.Now().Add(2 * time.Minute).Unix(),
 		})
 
-	tokenString, err := token.SignedString(secret)
+	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}

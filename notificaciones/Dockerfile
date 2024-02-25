@@ -28,5 +28,8 @@ COPY --from=builder app .
 # Expose port
 EXPOSE 9069
 
+ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /zoneinfo.zip
+ENV ZONEINFO /zoneinfo.zip
+
 # Exec built binary
 CMD ./app

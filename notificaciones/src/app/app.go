@@ -119,8 +119,13 @@ func (a *App) RunForrestRun(r *gin.Engine) error {
 }
 
 func (a *App) runTicker() error {
-	currentTime := time.Now()
-	logrus.Infof("La hora actual es: %d:%d", currentTime.Hour(), currentTime.Minute())
+	loc, err := time.LoadLocation("America/Buenos_Aires")
+	if err != nil {
+		return fmt.Errorf("error loading timezone: %w", err)
+	}
+
+	currentTime := time.Now().In(loc)
+	logrus.Infof("Current time: %d:%d", currentTime.Hour(), currentTime.Minute())
 	var triggerTicker time.Duration
 	if currentTime.Minute() < 30 {
 		diff := 30 - currentTime.Minute()
@@ -139,7 +144,7 @@ func (a *App) runTicker() error {
 		select {
 		case <-delayTicker.C:
 			logrus.Info("The wait is over")
-			currentTime = time.Now()
+			currentTime = time.Now().In(loc)
 			notificationsTicker.Reset(gap)
 			delayTicker.Stop()
 			notifications, err := a.NotificationHandler.GetCurrentNotifications()
@@ -159,7 +164,7 @@ func (a *App) runTicker() error {
 			}
 
 		case <-notificationsTicker.C:
-			currentTime = time.Now()
+			currentTime = time.Now().In(loc)
 			notifications, err := a.NotificationHandler.GetCurrentNotifications()
 			if err != nil {
 				logrus.Errorf("error fetching notifications: %v", err)

@@ -368,11 +368,16 @@ func (nh *NotificationHandler) SendEmail(c *gin.Context) {
 //	@Failure		400,404			{object}	ErrorResponse
 //	@Router			/notifications/trigger [post]
 func (nh *NotificationHandler) TriggerNotifications(c *gin.Context) {
-	currentTime := time.Now()
+	loc, err := time.LoadLocation("America/Buenos_Aires")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewErrorResponse(err))
+		return
+	}
+	currentTime := time.Now().In(loc)
 	notifications, err := nh.service.GetAll(fmt.Sprintf("%d:%d", currentTime.Hour(), currentTime.Minute()))
 	if err != nil {
-		a := fmt.Errorf("error searching all notifications for given hour %d:%d: %v", currentTime.Hour(), currentTime.Minute(), err)
-		errResponse := NewErrorResponse(a)
+		errContext := fmt.Errorf("error searching all notifications for given hour %d:%d: %v", currentTime.Hour(), currentTime.Minute(), err)
+		errResponse := NewErrorResponse(errContext)
 		c.JSON(errResponse.StatusCode, errResponse)
 		return
 	}
@@ -412,7 +417,11 @@ func (nh *NotificationHandler) TriggerNotifications(c *gin.Context) {
 
 // GetCurrentNotifications returns the notifications scheduled at the current hour
 func (nh *NotificationHandler) GetCurrentNotifications() ([]domain.Notification, error) {
-	currentTime := time.Now()
+	loc, err := time.LoadLocation("America/Buenos_Aires")
+	if err != nil {
+		return nil, fmt.Errorf("error loading timezone: %w", err)
+	}
+	currentTime := time.Now().In(loc)
 	var minuteStr string
 	if currentTime.Minute() < 30 {
 		minuteStr = "00"
