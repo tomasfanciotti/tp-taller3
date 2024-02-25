@@ -1,12 +1,16 @@
 BuildTp(){
 
-    docker build -f ./mascotas/Dockerfile -t "taller3-mascotas" ./mascotas
-    docker build -f ./tratamientos/Dockerfile.prod -t "taller3-tratamientos" ./tratamientos
-    docker build -f ./usuarios/Dockerfile -t "taller3-usuarios" ./usuarios
-    docker build -f ./front/Dockerfile -t "taller3-front" ./front
-    docker build -f ./notificaciones/Dockerfile -t "taller3-notificaciones" ./notificaciones
-    # docker build -f ./telegram/Dockerfile -t "taller3-telegram" ./telegram
+    if [ "$1" != "" ]; then
+      docker build -f ./$1/Dockerfile -t "taller3-$1" ./$1
 
+    else
+        docker build -f ./mascotas/Dockerfile -t "taller3-mascotas" ./mascotas
+        docker build -f ./tratamientos/Dockerfile.prod -t "taller3-tratamientos" ./tratamientos
+        docker build -f ./usuarios/Dockerfile -t "taller3-usuarios" ./usuarios
+        docker build -f ./front/Dockerfile -t "taller3-front" ./front
+        docker build -f ./notificaciones/Dockerfile -t "taller3-notificaciones" ./notificaciones
+        # docker build -f ./telegram/Dockerfile -t "taller3-telegram" ./telegram
+    fi
 }
 
 StopTp(){

@@ -15,7 +15,7 @@ const TreatmentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [treatment, setTreatment] = useState<Treatment | null>(null);
   const navigate = useNavigate();
-  const { isLoading, data, isSuccess } = useGetQuery<Treatment>(`http://localhost:9000/treatments/treatment/specific/${id}`);
+  const { isLoading, data, isSuccess } = useGetQuery<Treatment>(`http://localhost:9004/treatments/treatment/specific/${id}`);
   const columns: Array<Column<Comment>> = [
     {
       id: 'owner',

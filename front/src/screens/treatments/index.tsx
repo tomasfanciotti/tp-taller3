@@ -35,7 +35,7 @@ const CreateTreatmentScreen: React.FC = () => {
       description,
       applied_to: Number(id),
     };
-    mutate({url: 'http://localhost:9000/treatments/treatment/', body: treatmentData });
+    mutate({url: 'http://localhost:9004/treatments/treatment/', body: treatmentData });
   };
 
   useEffect(() => {
