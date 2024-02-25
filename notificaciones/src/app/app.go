@@ -137,7 +137,7 @@ func (a *App) runTicker() error {
 
 	logrus.Infof("Waiting %v until the next o'clock hour", triggerTicker)
 	delayTicker := time.NewTicker(triggerTicker)
-	gap := 5 * time.Minute // Notifications will be sent every half hour
+	gap := 30 * time.Minute // Notifications will be sent every half hour
 	notificationsTicker := time.NewTicker(gap)
 
 	for {

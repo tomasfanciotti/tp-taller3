@@ -422,6 +422,13 @@ func (nh *NotificationHandler) GetCurrentNotifications() ([]domain.Notification,
 		return nil, fmt.Errorf("error loading timezone: %w", err)
 	}
 	currentTime := time.Now().In(loc)
+	var hourStr string
+	if currentTime.Hour() < 10 {
+		hourStr = fmt.Sprintf("0%d", currentTime.Hour())
+	} else {
+		hourStr = fmt.Sprint(hourStr)
+	}
+
 	var minuteStr string
 	if currentTime.Minute() < 30 {
 		minuteStr = "00"
@@ -429,5 +436,5 @@ func (nh *NotificationHandler) GetCurrentNotifications() ([]domain.Notification,
 		minuteStr = "30"
 	}
 
-	return nh.service.GetAll(fmt.Sprintf("%d:%s", currentTime.Hour(), minuteStr))
+	return nh.service.GetAll(fmt.Sprintf("%s:%s", hourStr, minuteStr))
 }
