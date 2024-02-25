@@ -9,7 +9,7 @@ BuildTp(){
         docker build -f ./usuarios/Dockerfile -t "taller3-usuarios" ./usuarios
         docker build -f ./front/Dockerfile -t "taller3-front" ./front
         docker build -f ./notificaciones/Dockerfile -t "taller3-notificaciones" ./notificaciones
-        # docker build -f ./telegram/Dockerfile -t "taller3-telegram" ./telegram
+        docker build -f ./telegram/Dockerfile -t "taller3-telegram" ./telegram
     fi
 }
 
