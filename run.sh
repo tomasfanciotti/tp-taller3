@@ -4,23 +4,27 @@ BuildTp(){
     docker build -f ./tratamientos/Dockerfile.prod -t "taller3-tratamientos" ./tratamientos
     docker build -f ./usuarios/Dockerfile -t "taller3-usuarios" ./usuarios
     docker build -f ./front/Dockerfile -t "taller3-front" ./front
-    #docker build -f ./notificaciones/Dockerfile -t "taller3-notificaciones" ./notificaciones
+    docker build -f ./notificaciones/Dockerfile -t "taller3-notificaciones" ./notificaciones
     # docker build -f ./telegram/Dockerfile -t "taller3-telegram" ./telegram
 
 }
 
 StopTp(){
 
-     if [ "$1" == "-k" ]; then
+    docker-compose -f "./mascotas/docker-compose.yml" stop -t 5
+    docker-compose -f "./tratamientos/docker-compose.yml" stop -t 5
+    docker-compose -f "./usuarios/docker-compose.yml" stop -t 5
+    docker-compose -f "./front/docker-compose.yml" stop -t 5
+    docker-compose -f "./notificaciones/docker-compose.yml" stop -t 5
+
+   if [ "$1" == "-k" ]; then
        FLAGS='--remove-orphans'
-     fi
-
-    docker-compose -f "./mascotas/docker-compose.yml" stop -t 5 $FLAGS
-    docker-compose -f "./tratamientos/docker-compose.yml" stop -t 5 $FLAGS
-    docker-compose -f "./usuarios/docker-compose.yml" stop -t 5 $FLAGS
-    docker-compose -f "./front/docker-compose.yml" stop -t 5 $FLAGS
-    # docker-compose -f "./notificaciones/docker-compose.yml" stop -t 5 $FLAGS
-
+       docker-compose -f "./mascotas/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./tratamientos/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./usuarios/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./front/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./notificaciones/docker-compose.yml" down -t 5 $FLAGS
+  fi
 }
 
 RunTp(){
@@ -33,7 +37,7 @@ RunTp(){
         docker-compose -f "./mascotas/docker-compose.yml" up -d
         docker-compose -f "./tratamientos/docker-compose.yml" up -d
         docker-compose -f "./usuarios/docker-compose.yml" up -d
-        # docker-compose -f "./notificaciones/docker-compose.yml" up -d
+        docker-compose -f "./notificaciones/docker-compose.yml" up -d
     fi
 }
 

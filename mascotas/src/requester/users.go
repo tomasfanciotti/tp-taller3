@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	baseURL  = "https://api.lnt.digital/users"
+	baseURL  = "http://localhost:9005/users"
 	endpoint = "/telegram_id/{telegramID}"
 	getUser  = "get_user"
 )

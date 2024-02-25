@@ -30,7 +30,7 @@ func TestNewRequester(t *testing.T) {
 	assertServiceConfig(t, requester.TreatmentsService, expectedTreatmentsServiceConfig)
 
 	expectedUsersServiceConfig := expectedServiceConfig{
-		BaseURL:           "https://api.lnt.digital/users",
+		BaseURL:           "http://localhost:9005/users",
 		ExpectedEndpoints: getExpectedUsersServiceEndpoints(),
 	}
 	assertServiceConfig(t, requester.UsersService, expectedUsersServiceConfig)

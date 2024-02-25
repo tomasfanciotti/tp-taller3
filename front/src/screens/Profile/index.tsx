@@ -10,7 +10,7 @@ const Profile: React.FC<UserProps> = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
   const url = `/users/${user.id}`;
 
-  const { data, isLoading, isSuccess } = useGetQuery<{ data: ResponseForm }>(`https://api.lnt.digital${url}`);
+  const { data, isLoading, isSuccess } = useGetQuery<{ data: ResponseForm }>(`http://localhost:9005${url}`);
   const {data: putData, isLoading: putLoading, isSuccess: putSuccess, mutate } = usePutMutation<ResponseForm, ResponseForm>([url]);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Profile: React.FC<UserProps> = ({ user }) => {
 
   const handleEditToggle = () => {
     if (isEditing && userData) {
-      mutate({ url: `https://api.lnt.digital/users/${encodeURIComponent(user.email)}`, body: userData });
+      mutate({ url: `http://localhost:9005/users/${encodeURIComponent(user.email)}`, body: userData });
     }
     setIsEditing((prev) => !prev); // Toggle edit mode
   };

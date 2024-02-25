@@ -74,7 +74,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, isLoading, isSuccess, isError })
   useEffect(() => {
     if (isSuccess) {
       if (telegramId && Number(telegramId)) {
-        mutate({url: `https://api.lnt.digital/users/${encodeURIComponent(formData.username)}`, body: { telegram_id: Number(telegramId) }})
+        mutate({url: `http://localhost:9005/users/${encodeURIComponent(formData.username)}`, body: { telegram_id: Number(telegramId) }})
       } else {
         navigate('/main/home');
       }

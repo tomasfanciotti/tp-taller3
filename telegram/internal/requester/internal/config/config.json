@@ -54,7 +54,7 @@
   },
   "users_service":
   {
-    "base": "https://api.lnt.digital/users",
+    "base": "http://localhost:9005/users",
     "endpoints": {
       "get_user":
       {

@@ -12,7 +12,7 @@ const Patients: React.FC<UserProps> = ({ user }) => {
   const [searchEmail, setSearchEmail] = useState('');
   const [searchResults, setSearchResults] = useState<Array<UserRequestProps>>([]);
   const [firstLoading, setFirstLoading] = useState(true);
-  const { isSuccess, isLoading, data } = useGetQuery<{ data: Array<UserRequestProps> }>(`https://api.lnt.digital/users/search/by_email?email=${searchEmail}`);
+  const { isSuccess, isLoading, data } = useGetQuery<{ data: Array<UserRequestProps> }>(`http://localhost:9005/users/search/by_email?email=${searchEmail}`);
   const columns: Array<Column<UserRequestProps>> = [
     {
       id: 'id',

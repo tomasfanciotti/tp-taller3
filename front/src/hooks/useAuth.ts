@@ -48,7 +48,7 @@ export const useAuthSession = () => {
       }
     }
     const user = parseToken(item);
-    const dataFromUser = await fetch(`https://api.lnt.digital/users/${user.user_id}`, { headers: {authorization: `Bearer ${item}`} });
+    const dataFromUser = await fetch(`http://localhost:9005/users/${user.user_id}`, { headers: {authorization: `Bearer ${item}`} });
     const { data } = await dataFromUser.json();
     const userData: User = {
       id: user.user_id,
@@ -73,7 +73,7 @@ export const useSignIn = createMutation(
       const urlParams = new URLSearchParams();
       urlParams.append('username', user.mail);
       urlParams.append('password', user.password);
-      result = await fetch('https://api.lnt.digital/users/login', { body: urlParams, method: 'POST' });
+      result = await fetch('http://localhost:9005/users/login', { body: urlParams, method: 'POST' });
       if (result.status > 300) {
         throw new Error('nup');
       }
@@ -109,7 +109,7 @@ export const useSignUp = createMutation(
       };
       if (user.telegramId) body['telegram_id'] = user.telegramId;
       if (user.registrationNumber) body['registration_number'] = user.registrationNumber;
-      result = await fetch('https://api.lnt.digital/users/', { body: JSON.stringify(body), method: 'POST', headers: { 'Content-Type': 'application/json'} });
+      result = await fetch('http://localhost:9005/users/', { body: JSON.stringify(body), method: 'POST', headers: { 'Content-Type': 'application/json'} });
       if (result.status > 300) {
         throw new Error('nup');
       }
