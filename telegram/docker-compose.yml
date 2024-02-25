@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   telegram:
-    container_name: telegram-bot
+    container_name: telegram
     image: taller3-telegram
     ports:
       - '6969:6969'
@@ -10,6 +10,7 @@ services:
       - SECRET=TeEstasPortandoMal
       - ALGORITHM=HS256
       - ACCESS_CODE=SerasCastigada
+      - TELEGRAM_BOT_TOKEN=6542890982:AAEHiy4I-GDFVqVu-0s00fjmgb7m4idoXKA
 
     networks:
       - taller3-network

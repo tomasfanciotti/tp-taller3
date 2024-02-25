@@ -80,6 +80,7 @@ RunTp(){
           docker-compose -f "./tratamientos/docker-compose.yml" up -d
           docker-compose -f "./usuarios/docker-compose.yml" up -d
           docker-compose -f "./notificaciones/docker-compose.yml" up -d
+          docker-compose -f "./telegram/docker-compose.yml" up -d
         } && successStartUp || errorMsg
     fi
 }

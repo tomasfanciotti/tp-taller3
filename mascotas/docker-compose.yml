@@ -3,6 +3,11 @@ services:
   postgres:
     container_name: postgres
     image: postgres:latest
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       - POSTGRES_DB=pets
       - POSTGRES_USER=admin
@@ -23,7 +28,8 @@ services:
       - TREATMENTS_URL=http://treatments:9000/treatments/application/pet
       - USERS_URL=http://users:9000/users/telegram_id
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
         - taller3-network
 
