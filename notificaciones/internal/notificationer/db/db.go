@@ -5,8 +5,6 @@ import (
 	"notification-scheduler/internal/domain"
 	"notification-scheduler/internal/notificationer/db/internal/item"
 	"notification-scheduler/internal/utils"
-	"strconv"
-	"strings"
 )
 
 type NotificationsDB struct {
@@ -27,6 +25,10 @@ func (notifDB *NotificationsDB) CreateNotifications(notification domain.Notifica
 	for _, hour := range notification.Hours {
 		if !utils.ValidHour(hour) {
 			return nil, fmt.Errorf("error creating notifications: invalid key")
+		}
+
+		if len(hour) == 4 {
+			hour = "0" + hour
 		}
 
 		notificationItem := item.CreateItemFromNotification(notification)
@@ -124,17 +126,7 @@ func (notifDB *NotificationsDB) DeleteNotification(notificationID string) (bool,
 func (notifDB *NotificationsDB) GetAll(key string) []domain.Notification {
 	var notifications []domain.Notification
 
-	// Sanitize minutes
-	splitKey := strings.Split(key, ":")
-	minutes, _ := strconv.Atoi(splitKey[1])
-	var minuteKey string
-	if minutes < 30 || minutes > 40 {
-		minuteKey = "00"
-	} else if 30 <= minutes && minutes < 40 {
-		minuteKey = "30"
-	}
-
-	notifItems, found := notifDB.db[fmt.Sprintf("%s:%s", splitKey[0], minuteKey)]
+	notifItems, found := notifDB.db[key]
 	if !found {
 		return notifications
 	}

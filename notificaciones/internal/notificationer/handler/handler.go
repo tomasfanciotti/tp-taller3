@@ -374,7 +374,21 @@ func (nh *NotificationHandler) TriggerNotifications(c *gin.Context) {
 		return
 	}
 	currentTime := time.Now().In(loc)
-	notifications, err := nh.service.GetAll(fmt.Sprintf("%d:%d", currentTime.Hour(), currentTime.Minute()))
+	var hourStr string
+	if currentTime.Hour() < 10 {
+		hourStr = fmt.Sprintf("0%d", currentTime.Hour())
+	} else {
+		hourStr = fmt.Sprint(hourStr)
+	}
+
+	var minuteStr string
+	if currentTime.Minute() < 30 {
+		minuteStr = "00"
+	} else if currentTime.Minute()/10 == 3 {
+		minuteStr = "30"
+	}
+
+	notifications, err := nh.service.GetAll(fmt.Sprintf("%s:%s", hourStr, minuteStr))
 	if err != nil {
 		errContext := fmt.Errorf("error searching all notifications for given hour %d:%d: %v", currentTime.Hour(), currentTime.Minute(), err)
 		errResponse := NewErrorResponse(errContext)
