@@ -10,9 +10,11 @@ import { Column } from "../../../components/TailwindTable/definitions";
 import Table from "../../../components/TailwindTable";
 import ApplicationTable from "../../application";
 import { getOnlyDate } from "../../../../utils/formatDate";
+import {useAuthSession} from "../../../hooks/useAuth";
 
 const TreatmentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuthSession();
   const [treatment, setTreatment] = useState<Treatment | null>(null);
   const navigate = useNavigate();
   const { isLoading, data, isSuccess } = useGetQuery<Treatment>(`http://localhost:9004/treatments/treatment/specific/${id}`);
@@ -58,11 +60,16 @@ const TreatmentDetails: React.FC = () => {
           <div className="flex justify-center mt-3 mb-3">
             <ApplicationTable path="treatment"/>
           </div>
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 text-lg" onClick={() => navigate(`/doctor/treatment/edit/${id}`)}>Editar</button>
-          <button onClick={() => navigate(`/doctor/application/create/${data!.applied_to}?treatment_id=${id}`)}
-                  className="bg-yellow-500 text-white ml-3 py-2 px-4 rounded-md hover:bg-yellow-600 text-lg">
-            Agregar aplicacion
-          </button>
+          { user?.isDoctor && <div>
+            <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 text-lg"
+                    onClick={() => navigate(`/doctor/treatment/edit/${id}`)}>Editar
+            </button>
+            <button onClick={() => navigate(`/doctor/application/create/${data!.applied_to}?treatment_id=${id}`)}
+                    className="bg-yellow-500 text-white ml-3 py-2 px-4 rounded-md hover:bg-yellow-600 text-lg">
+              Agregar aplicacion
+            </button>
+          </div>
+          }
         </div>
       ) : (
         <p>No se encontraron detalles del tratamiento.</p>

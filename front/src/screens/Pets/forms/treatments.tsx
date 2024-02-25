@@ -8,9 +8,9 @@ import Table from "../../../components/TailwindTable";
 import { getOnlyDate } from "../../../../utils/formatDate";
 
 const TreatmentsView: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, petId } = useParams<{ id: string, petId: string }>();
   const [petTreatments, setPetTreatments] = useState<Treatment[]>([]);
-  const { isLoading, data, isSuccess } = useGetQuery<Treatment[]>(`http://localhost:9004/treatments/treatment/pet/${id}`);
+  const { isLoading, data, isSuccess } = useGetQuery<Treatment[]>(`http://localhost:9004/treatments/treatment/pet/${id || petId}`);
   const navigate = useNavigate();
   const columns: Array<Column<Treatment>> = [
     {
