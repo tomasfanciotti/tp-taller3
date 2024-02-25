@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	signInURLTemplate         = "https://lnt.digital/#/sign-up?telegram_id=%d"
+	signInURLTemplate         = "http://localhost:3000/#/sign-up?telegram_id=%d"
 	createAccountEndpoint     = "create-account"
 	dontCreateAccountEndpoint = "bye-dude-good-luck"
 	petInfoEndpoint           = "pet-info"
