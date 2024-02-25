@@ -1,0 +1,113 @@
+BuildTp(){
+
+    echo "TP Taller3 - Construyendo imágenes (puede demorar unos minutos...)"
+
+    if [ "$1" != "" ]; then
+      docker build -f ./$1/Dockerfile -t "taller3-$1" ./$1
+
+    else
+        docker build -f ./mascotas/Dockerfile -t "taller3-mascotas" ./mascotas
+        docker build -f ./tratamientos/Dockerfile.prod -t "taller3-tratamientos" ./tratamientos
+        docker build -f ./usuarios/Dockerfile -t "taller3-usuarios" ./usuarios
+        docker build -f ./front/Dockerfile -t "taller3-front" ./front
+        docker build -f ./notificaciones/Dockerfile -t "taller3-notificaciones" ./notificaciones
+        docker build -f ./telegram/Dockerfile -t "taller3-telegram" ./telegram
+    fi
+}
+
+successStartUp() {
+    printf "\n\n"
+    printf "La arquitectura se ha iniciado correctamentene."
+    printf "\n\n"
+    printf "Servicios >>\n"
+    printf "\t\t\t Mascotas:\t\t http://localhost:9001/pets/swagger/index.html\n"
+    printf "  [production only]\t Notificaciones:\t http://localhost:9002/notifications/swagger/index.html\n"
+    printf "  [production only]\t Telegram: \t\t -\n"
+    printf "\t\t\t Tratamientos:\t\t http://localhost:9004/treatments/swagger/index.html\n"
+    printf "\t\t\t Notificaciones:\t http://localhost:9005/docs\n"
+    printf "\n"
+    printf "Interfaz Web >> http://localhost:3000"
+    printf "\n\n"
+    printf "Detener: \t\t$0 stop\n"
+    printf "Detener y eliminar: \t$0 stop -k"
+    printf "\n\n"
+    printf "(Nota: el tp fue diseñado para correr de manera distribuída en la nube de AWS, por lo que algunos servidores dependen de servicios propios del proveedor)\n"
+}
+
+errorMsg() {
+    printf "\n\n"
+    printf "Ha ocurrido un error al iniciar la arquitectura. Ante un error similar al siguiente:\n\n"
+    printf "    'Error response from daemon: pull access denied for <<algun servicio>> [...]'"
+    printf "\n\n"
+    printf "Intentar buildear las imágenes nuevamente con el comando:\n\n"
+    printf "    > $0 build"
+    printf "\n\n"
+}
+
+StopTp(){
+
+    echo "TP Taller3 - Deteniendo arquitectura"
+
+    docker-compose -f "./mascotas/docker-compose.yml" stop -t 5
+    docker-compose -f "./tratamientos/docker-compose.yml" stop -t 5
+    docker-compose -f "./usuarios/docker-compose.yml" stop -t 5
+    docker-compose -f "./front/docker-compose.yml" stop -t 5
+    docker-compose -f "./notificaciones/docker-compose.yml" stop -t 5
+    docker-compose -f "./telegram/docker-compose.yml" stop -t 5
+
+   if [ "$1" == "-k" ]; then
+       FLAGS='--remove-orphans'
+       docker-compose -f "./mascotas/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./tratamientos/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./usuarios/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./front/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./notificaciones/docker-compose.yml" down -t 5 $FLAGS
+       docker-compose -f "./telegram/docker-compose.yml" down -t 5 $FLAGS
+  fi
+}
+
+RunTp(){
+    echo "TP Taller3 - Iniciando arquitectura"
+
+    if [ "$1" == "logs" ]; then
+        # Show logs
+        docker-compose -f "$2/docker-compose.yml" logs -f
+    else
+        # Docker Compose Up
+        {
+          docker-compose -f "./front/docker-compose.yml" up -d
+          docker-compose -f "./mascotas/docker-compose.yml" up -d
+          docker-compose -f "./tratamientos/docker-compose.yml" up -d
+          docker-compose -f "./usuarios/docker-compose.yml" up -d
+          docker-compose -f "./notificaciones/docker-compose.yml" up -d
+        } && successStartUp || errorMsg
+    fi
+}
+
+if [ "$1" == "build" ]; then
+    shift
+    BuildTp "$@"
+
+elif [ "$1" == "run" ]; then
+    shift
+    RunTp "$@"
+
+elif [ "$1" == "stop" ]; then
+    shift
+    StopTp "$@"
+
+elif [ "$1" == "help" ]; then
+    echo "TP Taller3 - Comandos disponibles:"
+    echo ""
+    echo "  - build [service]    Construye todas las imágenes necesarias o una en particular"
+    echo "                           service: folder del servicio"
+    echo ""
+    echo "  - run                Inicia la arquitectura definida en 'composer.py'"
+    echo ""
+    echo "  - stop [-k]          Detiene los contenedores corriendo"
+    echo "                           -k: elimina los contenedores"
+    echo ""
+
+else
+    printf "\nTP Taller3 - Comando desconocido. Prueba con $0 help\n\n"
+fi
