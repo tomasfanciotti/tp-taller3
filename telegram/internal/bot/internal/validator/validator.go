@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	layout     = "2006/01/02"
 	validTypes = []string{
 		"monkey",
 		"gorilla",
@@ -104,9 +103,9 @@ func ValidatePetType(petType string) error {
 	return nil
 }
 
-// ValidateDateType checks if the format is year/month/day
+// ValidateDateType checks if the format is year-month-day
 func ValidateDateType(rawDate string) error {
-	date, err := time.Parse(layout, rawDate)
+	date, err := time.Parse(time.DateOnly, rawDate)
 	if err != nil {
 		return err
 	}

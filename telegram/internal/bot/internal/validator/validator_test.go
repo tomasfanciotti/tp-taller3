@@ -23,13 +23,13 @@ func TestValidateDateType(t *testing.T) {
 			ExpectsError: true,
 		},
 		{
-			Name:         "Invalid format: year-month-year",
-			Date:         "2023-12-10",
+			Name:         "Invalid format",
+			Date:         "2023/12/10",
 			ExpectsError: true,
 		},
 		{
-			Name:         "Valid format",
-			Date:         "2023/12/10",
+			Name:         "Valid Format",
+			Date:         "2023-12-10",
 			ExpectsError: false,
 		},
 		{
