@@ -158,7 +158,7 @@ func (tb *TelegramBot) registerNotification(c tele.Context) error {
 		return c.Send("%v %v. %s", emoji.PoliceCarLight, err, tryAgainNotificationMessage)
 	}
 
-	if len(notificationData[hoursTag]) < 5 {
+	if len(notificationData[messageTag]) < 5 {
 		return c.Send(fmt.Sprintf("Message must have at least 5 characters. %s", tryAgainNotificationMessage))
 	}
 
@@ -194,7 +194,7 @@ func (tb *TelegramBot) registerNotification(c tele.Context) error {
 	if err != nil {
 		return c.Send(fmt.Sprintf("Oops, something went wrong creating the notifications. %s", tryAgainNotificationMessage))
 	}
-	
+
 	message := "Your notifications were set correctly:\n\n"
 	for idx, notification := range notifications {
 		data := fmt.Sprintf("Notification %d:\n", idx+1)
