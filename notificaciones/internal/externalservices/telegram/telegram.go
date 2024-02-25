@@ -1,6 +1,8 @@
 package telegram
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sirupsen/logrus"
@@ -16,7 +18,7 @@ import (
 const (
 	telegramSecretEnvVar     = "TELEGRAM_SECRET"
 	telegramAccessCodeEnvVar = "TELEGRAM_ACCESS_CODE"
-	url                      = "http://localhost:6969/telegram/notifications"
+	url                      = "http://telegram:6969/telegram/notifications"
 )
 
 // Telegramer makes requests against Telegram Service
@@ -37,7 +39,14 @@ func (t *Telegramer) SendNotifications(notifications []domain.Notification) erro
 		telegramNotifications = append(telegramNotifications, notification.NewTelegramNotification(notifications[idx]))
 	}
 
-	request, err := http.NewRequest(http.MethodPost, url, nil)
+	rawBody, err := json.Marshal(telegramNotifications)
+	if err != nil {
+		logrus.Errorf("error marshalling notification request: %v", err)
+		return fmt.Errorf("some fucky wucky error: %v", err)
+	}
+
+	requestBody := bytes.NewReader(rawBody)
+	request, err := http.NewRequest(http.MethodPost, url, requestBody)
 	if err != nil {
 		err = fmt.Errorf("%w: %v", errCreatingRequest, err)
 		logrus.Errorf("%v", err)

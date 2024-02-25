@@ -20,6 +20,8 @@ services:
       - DB_URL=postgres://admin:admin@postgres:5432/pets?sslmode=disable
       - secret="jamas me usan bien"
       - algorithm=HS256
+      - TREATMENTS_URL=http://treatments:9000/treatments/application/pet
+      - USERS_URL=http://users:9000/users/telegram_id
     depends_on:
       - postgres
     networks:

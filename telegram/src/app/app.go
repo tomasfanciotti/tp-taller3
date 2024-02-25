@@ -74,7 +74,7 @@ func (a *App) Run(r *gin.Engine) error {
 	port := os.Getenv(senderPortKey)
 	if port == "" {
 		logrus.Info("Using default port (8080) for notification sender")
-		port = "8080"
+		port = "6969"
 	}
 	go func() {
 		logrus.Info("Starting notification sender")
