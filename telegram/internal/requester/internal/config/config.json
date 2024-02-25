@@ -1,7 +1,7 @@
 {
   "pets_service":
   {
-    "base": "http://localhost:9001/pets",
+    "base": "http://pets:9000/pets",
     "endpoints":
     {
       "register_pet":
@@ -28,7 +28,7 @@
   },
   "treatments_service":
   {
-    "base": "http://localhost:9000/treatments",
+    "base": "http://treatments:9000/treatments",
     "endpoints": {
       "get_pet_treatments": {
         "path": "/treatment/pet/{petID}",
@@ -54,7 +54,7 @@
   },
   "users_service":
   {
-    "base": "http://localhost:9005/users",
+    "base": "http://users:9000/users",
     "endpoints": {
       "get_user":
       {
@@ -65,7 +65,7 @@
   },
   "notifications_service":
   {
-    "base": "http://localhost:9069/notifications",
+    "base": "http://notifications:9069/notifications",
     "endpoints": {
       "schedule_notifications":
       {
