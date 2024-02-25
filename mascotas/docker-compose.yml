@@ -12,7 +12,7 @@ services:
 
   pets:
     container_name: pets
-    image: back-mascotas
+    image: taller3-mascotas
     ports:
       - "9001:9000"
     environment:
