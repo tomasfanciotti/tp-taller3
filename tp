@@ -24,7 +24,7 @@ successStartUp() {
     printf "  [production only]\t Notificaciones:\t http://localhost:9002/notifications/swagger/index.html\n"
     printf "  [production only]\t Telegram: \t\t -\n"
     printf "\t\t\t Tratamientos:\t\t http://localhost:9004/treatments/swagger/index.html\n"
-    printf "\t\t\t Notificaciones:\t http://localhost:9005/docs\n"
+    printf "\t\t\t Usuarios:\t\t http://localhost:9005/docs\n"
     printf "\n"
     printf "Interfaz Web >> http://localhost:3000"
     printf "\n\n"
